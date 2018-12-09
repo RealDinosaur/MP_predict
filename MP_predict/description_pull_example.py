@@ -1,4 +1,6 @@
-
+'''
+Simple html read file - example file
+'''
 from lxml import html
 
 import requests
