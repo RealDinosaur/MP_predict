@@ -14,6 +14,7 @@ class Routes():
         self.route_dict = self.data['routes']
         self.getDescription()
         self.convertGradeToInt()
+        self.route_values = {}
 
         #print(self.route_dict[5])
         #print(self.route_dict[5].get('id'))
@@ -38,5 +39,12 @@ class Routes():
             except:
                 route['description'] = 'No description'
 
+    '''
+    Sport climbing routes on Mountain Project are graded on 5.x scale, with x being
+    any number from 0 - 15. Routes may also have additional suffixes. Modifiers, 
+    ordered from lowest to highest:
+    a, -, b, [blank], c, +, d
+    This function takes the difficulty and gives it an integer value. 
+    '''
     def convertGradeToInt(self):
         pass
