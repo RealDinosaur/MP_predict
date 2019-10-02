@@ -14,6 +14,11 @@ class Routes():
         self.route_url = route_url
         self.route_df = self.getRouteDataFrame()
 
+        #self.route_dict = self.data['routes']
+        #self.getDescription()
+        #self.convertGradeToInt()
+        #self.route_values = {}
+
     def getRouteDataFrame(self):
         '''
         Create DataFrame object from JSON data
@@ -21,21 +26,34 @@ class Routes():
         page =  requests.get(self.route_url)
         json_data = json.loads(page.content.decode('utf-8'))
         route_df = pd.DataFrame(json_data['routes'])
-        route_df['description'] = route_df.url.apply(self.getDescription)
-        print(route_df.description)
+        route_df['description'] = df.apply(lambda x: self.getDescription(route_df.url))
         return route_df
 
     def getDescription(self, route_url):
         '''
         Pull description from route URL, and add to route_df
         '''
-        page = requests.get(route_url)
-        tree = html.fromstring(page.content)
-        html_description = tree.xpath('//*[@id="route-page"]/div/div[3]/div[1]/div[3]/div[2]/div/text()')
-        if html_description:
-            html_description = html_description[0]
-        return(html_description)
+        print(route_url)
+        
 
+
+    '''
+    Get URL from route dictonary, use HTML parser to get route description from
+    MP page, add value of "description" for the route. 
+    '''
+    def getDescription(self):
+        i = 0
+        for route in self.route_dict:
+            i += 1
+            route_url = route['url'] 
+            page = requests.get(route_url)
+            tree = html.fromstring(page.content)
+            try:
+                html_description = tree.xpath('//*[@id="route-page"]/div/div[3]/div[1]/div[3]/div[2]/div/text()')
+                route['description'] = html_description[0]
+                print(route['description'])
+            except:
+                route['description'] = 'No description'
 
     '''
     Sport climbing routes on Mountain Project are graded on 5.x scale, with x being
